@@ -1,3 +1,6 @@
+import Typewriter from "components/Typewriter";
+
 export default function Profile() {
-  return <></>;
+  // const yearsOfCareer = new Date().getFullYear() - 2015;
+  return <Typewriter />;
 }
