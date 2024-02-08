@@ -13,8 +13,11 @@ variable "repo_name" {
 variable "github_owner" {
   default = "kanazawanao"
 }
-variable "bucket_name" {
-  default = "web_app"
+variable "name" {
+  default = "web-app"
+}
+variable "service_domain" {
+  default = "naz-pg.dev"
 }
 variable "credentials" {}
 variable "github_token" {}

@@ -4,8 +4,9 @@ resource "random_id" "bucket_suffix" {
 
 resource "google_storage_bucket" "web_app" {
   location = var.region
-  name = "${var.bucket_name}-${random_id.bucket_suffix.hex}"
+  name = "${var.name}-${random_id.bucket_suffix.hex}"
   project = var.project_id
+  force_destroy = true
 
   website {
     main_page_suffix = "index.html"

@@ -1,8 +1,8 @@
 module "bucket" {
-  source      = "../../modules/bucket"
-  project_id  = var.project_id
-  bucket_name = var.bucket_name
-  region      = var.region
+  source     = "../../modules/bucket"
+  project_id = var.project_id
+  name       = var.name
+  region     = var.region
 }
 
 module "identity_pool" {
@@ -30,4 +30,18 @@ module "github_actions" {
   repo_name             = var.repo_name
   gcp_identity_provider = module.identity_pool.workload_identity_pool_provider_name
   gcp_service_account   = module.service_account.service_account_email
+}
+
+module "load_balancer" {
+  source         = "../../modules/load-balancer"
+  bucket_name    = module.bucket.bucket_name
+  name           = var.name
+  service_domain = var.service_domain
+}
+
+module "routing" {
+  source                   = "../../modules/routing"
+  name                     = var.name
+  web_app_load_balancer_ip = module.load_balancer.load_balancer_ip
+  service_domain           = var.service_domain
 }
