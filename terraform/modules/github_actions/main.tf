@@ -16,7 +16,7 @@ resource "github_actions_secret" "service_account" {
 }
 
 resource "github_actions_variable" "bucket_name" {
-  repository      = data.github_repository.repo.name
+  repository    = data.github_repository.repo.name
   variable_name = "GCS_BUCKET_NAME"
-  value = var.bucket_name
+  value         = var.bucket_name
 }

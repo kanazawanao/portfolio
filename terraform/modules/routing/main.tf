@@ -1,8 +1,7 @@
 resource "google_dns_managed_zone" "default" {
-  name          = "${var.name}-zone"
-  dns_name      = "${var.service_domain}."
-  description   = "Web app DNS zone"
-  force_destroy = "true"
+  name        = "${var.name}-zone"
+  dns_name    = "${var.service_domain}."
+  description = "Web app DNS zone"
 }
 
 resource "google_dns_record_set" "default" {

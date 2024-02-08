@@ -3,10 +3,10 @@ resource "random_id" "bucket_suffix" {
 }
 
 resource "google_storage_bucket" "web_app" {
-  location = var.region
-  name = "${var.name}-${random_id.bucket_suffix.hex}"
-  project = var.project_id
-  force_destroy = true
+  location      = var.region
+  name          = "${var.name}-${random_id.bucket_suffix.hex}"
+  project       = var.project_id
+  force_destroy = false
 
   website {
     main_page_suffix = "index.html"
@@ -16,8 +16,17 @@ resource "google_storage_bucket" "web_app" {
 
 resource "google_storage_bucket_access_control" "public_rule" {
   bucket = google_storage_bucket.web_app.id
-  role = "READER"
+  role   = "READER"
   entity = "allUsers"
+}
+
+
+resource "google_storage_bucket_iam_binding" "public_bucket_iam_binding" {
+  bucket = google_storage_bucket.web_app.id
+  role   = "roles/storage.objectViewer"
+  members = [
+    "allUsers",
+  ]
 }
 
 output "bucket_name" {
