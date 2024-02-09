@@ -2,10 +2,17 @@ resource "google_compute_global_address" "default" {
   name = "${var.name}-address"
 }
 
-resource "google_compute_managed_ssl_certificate" "ssl" {
-  name = "${var.name}-cert"
+resource "google_compute_managed_ssl_certificate" "naz_ssl" {
+  name = "${var.name}-naz-cert"
   managed {
-    domains = [var.service_domain]
+    domains = [var.service_domain, "www.${var.service_domain}"]
+  }
+}
+
+resource "google_compute_managed_ssl_certificate" "naz_admin_ssl" {
+  name = "${var.name}-admin-naz-cert"
+  managed {
+    domains = ["admin.${var.service_domain}"]
   }
 }
 
@@ -24,12 +31,32 @@ resource "google_compute_backend_bucket" "cdn" {
 resource "google_compute_url_map" "static" {
   name            = "static-load-balancer"
   default_service = google_compute_backend_bucket.cdn.self_link
+
+  host_rule {
+    hosts        = [var.service_domain]
+    path_matcher = "naz-pg"
+  }
+
+  host_rule {
+    hosts        = ["www.${var.service_domain}"]
+    path_matcher = "naz-pg"
+  }
+
+  host_rule {
+    hosts        = ["admin.${var.service_domain}"]
+    path_matcher = "naz-pg"
+  }
+
+  path_matcher {
+    name            = "naz-pg"
+    default_service = google_compute_backend_bucket.cdn.self_link
+  }
 }
 
 resource "google_compute_target_https_proxy" "static" {
   name             = "static-proxy"
   url_map          = google_compute_url_map.static.self_link
-  ssl_certificates = [google_compute_managed_ssl_certificate.ssl.self_link]
+  ssl_certificates = [google_compute_managed_ssl_certificate.naz_ssl.self_link, google_compute_managed_ssl_certificate.naz_admin_ssl.self_link]
   ssl_policy       = google_compute_ssl_policy.tls12_modern.id
 }
 
