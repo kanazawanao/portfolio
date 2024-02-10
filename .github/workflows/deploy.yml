@@ -1,45 +1,45 @@
-name: Deploy
+# name: Deploy
 
-on:
-  workflow_dispatch:
-  push:
-    branches: main
+# on:
+#   workflow_dispatch:
+#   push:
+#     branches: main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 30
+#     permissions:
+#       id-token: write
+#       contents: read
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
 
-      - name: Authenticate Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{secrets.GCP_IDENTITY_PROVIDER}}
-          service_account: ${{secrets.GCP_SERVICE_ACCOUNT}}
+#       - name: Authenticate Google Cloud
+#         uses: google-github-actions/auth@v2
+#         with:
+#           workload_identity_provider: ${{secrets.GCP_IDENTITY_PROVIDER}}
+#           service_account: ${{secrets.GCP_SERVICE_ACCOUNT}}
 
-      - name: yarn install
-        run: yarn install
+#       - name: yarn install
+#         run: yarn install
 
-      - name: build
-        run: yarn build
+#       - name: build
+#         run: yarn build
 
-      - name: delete files
-        run: |-
-          count=`gsutil ls gs://${{env.GCS_BUCKET_NAME}}/ | wc -l`
-          if [ $count -gt 0 ] ; then
-            gsutil -m rm -r gs://${{env.GCS_BUCKET_NAME}}/\*
-          else
-            echo 'backet no files'
-          fi
+#       - name: delete files
+#         run: |-
+#           count=`gsutil ls gs://${{env.GCS_BUCKET_NAME}}/ | wc -l`
+#           if [ $count -gt 0 ] ; then
+#             gsutil -m rm -r gs://${{env.GCS_BUCKET_NAME}}/\*
+#           else
+#             echo 'backet no files'
+#           fi
 
-      - id: "upload-folder"
-        uses: "google-github-actions/upload-cloud-storage@v2"
-        with:
-          path: "dist/"
-          destination: ${{vars.GCS_BUCKET_NAME}}
-          parent: false
+#       - id: "upload-folder"
+#         uses: "google-github-actions/upload-cloud-storage@v2"
+#         with:
+#           path: "dist/"
+#           destination: ${{vars.GCS_BUCKET_NAME}}
+#           parent: false
