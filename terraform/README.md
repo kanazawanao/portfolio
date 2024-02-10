@@ -41,9 +41,15 @@ terraform.tfvars ファイルを作成して、`credentials` と `github_token` 
 github token には以下の値を設定する
 
 ```sh
-brew install gh
 gh auth login
 gh auth token
 ```
 
 credentials には terraform のサービスアカウントキーを指定する
+
+## 有効にする必要がある API
+
+- Compute Engine API
+- Identity and Access Management (IAM) API
+- Cloud DNS API
+- Cloud Resource Manager API
