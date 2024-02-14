@@ -6,7 +6,7 @@ resource "google_storage_bucket" "web_app" {
   location      = var.region
   name          = "${var.name}-${random_id.bucket_suffix.hex}"
   project       = var.project_id
-  force_destroy = false
+  force_destroy = true
 
   website {
     main_page_suffix = "index.html"

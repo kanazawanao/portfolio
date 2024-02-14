@@ -33,7 +33,7 @@ module "github_actions" {
 }
 
 module "load_balancer" {
-  source         = "../../modules/load-balancer"
+  source         = "../../modules/load_balancer"
   bucket_name    = module.bucket.bucket_name
   name           = var.name
   service_domain = var.service_domain
