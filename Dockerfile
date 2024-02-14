@@ -4,8 +4,7 @@ ARG ENV
 
 WORKDIR /app
 
-COPY ./package.json ./yarn.lock /app/
-COPY ./src/ /app/src/
+COPY ./ /app/
 
 RUN yarn set version stable
 
