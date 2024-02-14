@@ -5,16 +5,10 @@ resource "google_compute_global_address" "default" {
 resource "google_compute_managed_ssl_certificate" "naz_ssl" {
   name = "${var.name}-naz-cert"
   managed {
-    domains = [var.service_domain, "www.${var.service_domain}"]
+    domains = [var.service_domain]
   }
 }
 
-resource "google_compute_managed_ssl_certificate" "naz_admin_ssl" {
-  name = "${var.name}-admin-naz-cert"
-  managed {
-    domains = ["admin.${var.service_domain}"]
-  }
-}
 
 resource "google_compute_ssl_policy" "tls12_modern" {
   name            = "static-ssl-policy"
@@ -56,7 +50,7 @@ resource "google_compute_url_map" "static" {
 resource "google_compute_target_https_proxy" "static" {
   name             = "static-proxy"
   url_map          = google_compute_url_map.static.self_link
-  ssl_certificates = [google_compute_managed_ssl_certificate.naz_ssl.self_link, google_compute_managed_ssl_certificate.naz_admin_ssl.self_link]
+  ssl_certificates = [google_compute_managed_ssl_certificate.naz_ssl.self_link]
   ssl_policy       = google_compute_ssl_policy.tls12_modern.id
 }
 

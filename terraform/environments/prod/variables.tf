@@ -5,7 +5,7 @@ variable "zone" {
   default = "asia-northeast1-a"
 }
 variable "project_id" {
-  default = "rescuenow070"
+  default = "naz-pg"
 }
 variable "repo_name" {
   default = "kanazawanao/portfolio"
