@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: rescuenow070
-  SERVICE: naz
+  SERVICE: naz-pg-web
   REGION: asia-northeast1
 
 jobs:
