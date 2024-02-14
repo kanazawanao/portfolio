@@ -12,7 +12,7 @@ RUN yarn set version stable
 # build
 RUN cd /app && \
     yarn install && \
-    yarn build:production && \
+    yarn build && \
     rm -rf node_modules
 
 FROM nginx:alpine
