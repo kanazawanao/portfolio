@@ -54,4 +54,5 @@ jobs:
             --image asia.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }} \
             --platform "managed" \
             --allow-unauthenticated \
+            --service-account ${{secrets.GCP_SERVICE_ACCOUNT}} \
             --quiet
