@@ -22,9 +22,22 @@ resource "google_compute_backend_bucket" "cdn" {
   enable_cdn  = true
 }
 
+resource "google_compute_backend_service" "web-naz" {
+  name = "web-naz-backend"
+
+  protocol    = "HTTP"
+  port_name   = "http"
+  timeout_sec = 30
+
+  backend {
+    group = var.web_admin_console_network_endpoint_id
+  }
+}
+
+
 resource "google_compute_url_map" "static" {
   name            = "static-load-balancer"
-  default_service = google_compute_backend_bucket.cdn.self_link
+  default_service = google_compute_backend_service.web-naz.self_link
 
   host_rule {
     hosts        = [var.service_domain]
@@ -43,7 +56,7 @@ resource "google_compute_url_map" "static" {
 
   path_matcher {
     name            = "naz-pg"
-    default_service = google_compute_backend_bucket.cdn.self_link
+    default_service = google_compute_backend_service.web-naz.self_link
   }
 }
 

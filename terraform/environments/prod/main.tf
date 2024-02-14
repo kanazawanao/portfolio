@@ -32,11 +32,23 @@ module "github_actions" {
   gcp_service_account   = module.service_account.service_account_email
 }
 
+module "cloud_run" {
+  source = "../../modules/cloud_run"
+  region = var.region
+}
+
+module "network" {
+  source = "../../modules/network"
+  region = var.region
+  cloud_run_service_name = module.cloud_run.cloud_run_service_name
+}
+
 module "load_balancer" {
   source         = "../../modules/load_balancer"
   bucket_name    = module.bucket.bucket_name
   name           = var.name
   service_domain = var.service_domain
+  web_admin_console_network_endpoint_id = module.network.naz-web-network-endpoint-id
 }
 
 module "routing" {
