@@ -18,7 +18,8 @@ resource "google_service_account_iam_policy" "policy" {
 data "google_iam_policy" "policy" {
   binding {
     members = [
-      "principalSet://iam.googleapis.com/${var.identity_pool_name}/attribute.repository/${var.repo_name}",
+      "principalSet://iam.googleapis.com/${var.identity_pool_name}/attribute.repository/${var.web_repo_name}",
+      "principalSet://iam.googleapis.com/${var.identity_pool_name}/attribute.repository/${var.api_repo_name}",
     ]
     role = "roles/iam.workloadIdentityUser"
   }

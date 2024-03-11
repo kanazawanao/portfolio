@@ -5,10 +5,13 @@ variable "zone" {
   default = "asia-northeast1-a"
 }
 variable "project_id" {
-  default = "naz-pg"
+  default = "rescuenow070"
 }
-variable "repo_name" {
+variable "web_repo_name" {
   default = "kanazawanao/portfolio"
+}
+variable "api_repo_name" {
+  default = "kanazawanao/portfolio-api"
 }
 variable "github_owner" {
   default = "kanazawanao"

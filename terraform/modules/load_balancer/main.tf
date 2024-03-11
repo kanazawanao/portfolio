@@ -5,7 +5,7 @@ resource "google_compute_global_address" "default" {
 resource "google_compute_managed_ssl_certificate" "naz_ssl" {
   name = "${var.name}-naz-cert"
   managed {
-    domains = [var.service_domain]
+    domains = [var.service_domain, "api.${var.service_domain}"]
   }
 }
 
@@ -30,7 +30,20 @@ resource "google_compute_backend_service" "web-naz" {
   timeout_sec = 30
 
   backend {
-    group = var.web_admin_console_network_endpoint_id
+    group = var.web_network_endpoint_id
+  }
+}
+
+resource "google_compute_backend_service" "api-naz" {
+  name = "api-naz-backend"
+
+  protocol        = "HTTP"
+  port_name       = "http"
+  timeout_sec     = 30
+  security_policy = var.security_policy_id
+
+  backend {
+    group = var.api_network_endpoint_id
   }
 }
 
@@ -45,18 +58,18 @@ resource "google_compute_url_map" "static" {
   }
 
   host_rule {
-    hosts        = ["www.${var.service_domain}"]
-    path_matcher = "naz-pg"
-  }
-
-  host_rule {
-    hosts        = ["admin.${var.service_domain}"]
-    path_matcher = "naz-pg"
+    hosts        = ["api.${var.service_domain}"]
+    path_matcher = "api"
   }
 
   path_matcher {
     name            = "naz-pg"
     default_service = google_compute_backend_service.web-naz.self_link
+  }
+
+  path_matcher {
+    name            = "api"
+    default_service = google_compute_backend_service.api-naz.self_link
   }
 }
 

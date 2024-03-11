@@ -13,3 +13,13 @@ resource "google_dns_record_set" "default" {
     var.web_app_load_balancer_ip
   ]
 }
+
+resource "google_dns_record_set" "cname_api" {
+  name         = "api.${google_dns_managed_zone.default.dns_name}"
+  managed_zone = google_dns_managed_zone.default.name
+  type         = "CNAME"
+  ttl          = 300
+  rrdatas = [
+    google_dns_managed_zone.default.dns_name
+  ]
+}
