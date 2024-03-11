@@ -7,7 +7,6 @@ on:
 
 env:
   PROJECT_ID: rescuenow070
-  SERVICE: naz-pg-web
   REGION: asia-northeast1
 
 jobs:
@@ -40,18 +39,18 @@ jobs:
           # build
           docker build \
              --file ./Dockerfile \
-             --tag asia.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }} \
+             --tag asia.gcr.io/${{ env.PROJECT_ID }}/${{ vars.GCS_CLOUD_RUN_NAME }}:${{ github.sha }} \
              --build-arg ENV=dev \
              .
 
           # push
-          docker push asia.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
+          docker push asia.gcr.io/${{ env.PROJECT_ID }}/${{ vars.GCS_CLOUD_RUN_NAME }}:${{ github.sha }}
 
       - name: Deploy to Cloud Run
         run: |-
-          gcloud run deploy ${{ env.SERVICE }} \
+          gcloud run deploy ${{ vars.GCS_CLOUD_RUN_NAME }} \
             --region ${{ env.REGION }} \
-            --image asia.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }} \
+            --image asia.gcr.io/${{ env.PROJECT_ID }}/${{ vars.GCS_CLOUD_RUN_NAME }}:${{ github.sha }} \
             --platform "managed" \
             --allow-unauthenticated \
             --service-account ${{secrets.GCP_SERVICE_ACCOUNT}} \
